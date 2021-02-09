@@ -11,7 +11,7 @@ sup_img_type = (".jpg", ".png")
 file_add_info = "_flipped_resized"
 
 #Function to go through a directory, change format, size, and rotation of image.
-def correct_images(directory, img_format, size, rotation):
+def correct_images(directory, img_format, size, rotation, outfile_path):
     print(directory)
     executor = futures.ThreadPoolExecutor()
     if os.path.exists(directory):
@@ -23,7 +23,7 @@ def correct_images(directory, img_format, size, rotation):
                 try:
                     with Image.open(input_file) as im:
                         print("Correcting: " + input_file + " | Renaming to: " + output_file)
-                        executor.submit(im.rotate(rotation).resize(size).save(output_file))
+                        executor.submit(im.rotate(rotation).resize(size).save(outfile_path + output_file))
                 except OSError as e:
                     print("Error Correcting: " + input_file)
                     print(e)
@@ -41,5 +41,6 @@ if __name__ == "__main__":
         directory = os.getcwd(),
         img_format = input("What is the specified format? Ex:.jpg: "),
         size = tuple(map(int,input("What is the size for the images? Ex:1920,1080: ").split(','))),
-        rotation = int(input("Specify the rotation of the images? Ex:90: "))
+        rotation = int(input("Specify the rotation of the images. Ex:90: ")),
+        outfile_path = input("Specify the save location of the files: ")
     )
